@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/hapi
+    username: hapi
+    password: hapi_password
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.search.enabled: false
+
+hapi:
+  fhir:
+    fhir_version: R4
+
+    # Validation settings
+    validation:
+      enabled: true
+      requests_enabled: true
+      responses_enabled: false
+
+    # REQUIRED: Must be true for the implementationguides block below to be processed.
+    # Defaults to false in the HAPI starter, which is why IGs silently never install.
+    ig_runtime_upload_enabled: true
+
+    # Disable automatic transitive dependency resolution.
+    # Prevents hl7.fhir.r4.examples#4.0.1 from being pulled in transitively,
+    # which would cause a fatal HAPI-0848 duplicate CodeSystem crash at startup.
+    install_transitive_ig_dependencies: false
+
+    # Disable HAPI's pre-upload status validation for IG resources.
+    # Sushi-generated StructureDefinitions use status values that HAPI's internal
+    # check rejects, silently dropping every resource and leaving the IG index empty.
+    validate_resource_status_for_package_upload: false
+
+    # Ensure $validate calls check resources against the installed IG profiles.
+    enable_repository_validating_interceptor: true
+
+    implementationguides:
+      ncpi_0_2_0:
+        name: ncpi-fhir-implementation-guide-v2
+        version: 0.2.0
+        #packageUrl: https://deploy-preview-162--ncpi-fhir-ig-v2.netlify.app/package.tgz
+        packageUrl: https://nih-ncpi.github.io/ncpi-fhir-ig-2/package.tgz
+        installMode: STORE_AND_INSTALL
+        fetchDependencies: false
+        reloadExisting: true
+
+    # Allow loading and referencing resources during ETL development
+    allow_external_references: true
+    allow_cascading_deletes: true
+    allow_multiple_delete: true
+
+    default_page_size: 50
+    max_page_size: 500
+    narrative_enabled: false
+
+logging:
+  level:
+    ca.uhn.fhir.jpa.packages: WARN
+    ca.uhn.fhir.context.support: WARN
+    org.hl7.fhir.r4.hapi.ctx: WARN
+    org.hl7.fhir.common.hapi.validation: WARN
+    # Uncomment for verbose package loading debug info:
+    # ca.uhn.fhir.jpa.packages.PackageInstallerSvcImpl: DEBUG
