@@ -6,6 +6,10 @@ services:
       - "8080:8080"
     environment:
       JAVA_TOOL_OPTIONS: "-Xmx8g"
+      # Treats US Core URLs as local logical references
+      HAPI_FHIR_STORAGE_TREAT_REFERENCES_AS_LOGICAL: "http://hl7.org*"
+      # Ensures the IG installer/validator is fully active
+      HAPI_FHIR_IG_RUNTIME_UPLOAD_ENABLED: "true"
     volumes:
       - ./hapi.application.yml:/app/config/application.yaml
     depends_on:

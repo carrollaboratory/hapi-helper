@@ -37,6 +37,18 @@ hapi:
     enable_repository_validating_interceptor: true
 
     implementationguides:
+      us_core:
+        name: hl7.fhir.us.core
+        version: 6.1.0
+        packageUrl: https://hl7.org/fhir/us/core/STU6.1/package.tgz
+        installMode: STORE_AND_INSTALL # Install these as actual resources
+        reloadExisting: false
+      mcode:
+        name: hl7.fhir.us.mcode
+        version: 4.0.0
+        packageUrl: https://hl7.org/fhir/us/mcode/package.tgz
+        installMode: STORE_ONLY # Just make them available for validation
+        reloadExisting: false
       ncpi_0_2_0:
         name: ncpi-fhir-implementation-guide-v2
         version: 0.2.0
@@ -51,9 +63,15 @@ hapi:
     allow_cascading_deletes: true
     allow_multiple_delete: true
 
+    allow_database_validation_override: true
+
     default_page_size: 50
     max_page_size: 500
     narrative_enabled: false
+
+    storage:
+      treat_references_as_logical:
+        - "http://hl7.org*"
 
 logging:
   level:
