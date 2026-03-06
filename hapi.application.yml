@@ -101,4 +101,7 @@ logging:
     org.hl7.fhir.r4.hapi.ctx: WARN
     org.hl7.fhir.common.hapi.validation: WARN
     # Uncomment for verbose package loading debug info:
+    # We probably want to comment this out once we are satisfied that
+    # everything really is working as we want. This adds a LOT of junk to the
+    # logs.
     ca.uhn.fhir.jpa.packages.PackageInstallerSvcImpl: DEBUG
