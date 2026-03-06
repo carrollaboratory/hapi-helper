@@ -12,13 +12,27 @@ spring:
 hapi:
   fhir:
     fhir_version: R4
-
+    tester:
+      home:
+        server_address: http://localhost:8080/fhir
     # Validation settings
     validation:
       enabled: true
       requests_enabled: true
       responses_enabled: false
 
+    remote_terminology_service:
+      all:
+        system: "*"
+        url: https://tx.fhir.org/r4
+      # I suspect we don't need these, but in case they are helpful, they came
+      # the github example config
+      # snomed:
+      #   system: "http://snomed.info/sct"
+      #   url: "https://tx.fhir.org/r4/"
+      # loinc:
+      #   system: "http://loinc.org"
+      #   url: "https://hapi.fhir.org/baseR4/"
     # REQUIRED: Must be true for the implementationguides block below to be processed.
     # Defaults to false in the HAPI starter, which is why IGs silently never install.
     ig_runtime_upload_enabled: true
@@ -37,6 +51,12 @@ hapi:
     enable_repository_validating_interceptor: true
 
     implementationguides:
+      hl7_terminology:
+        name: hl7.terminology.r4
+        version: 5.5.0
+        packageUrl: https://packages.fhir.org/hl7.terminology.r4/5.5.0
+        installMode: STORE_AND_INSTALL
+        reloadExisting: false
       us_core:
         name: hl7.fhir.us.core
         version: 6.1.0
@@ -68,7 +88,8 @@ hapi:
     default_page_size: 50
     max_page_size: 500
     narrative_enabled: false
-
+    cr:
+      enabled: true # enables CQL/terminology services including $expand
     storage:
       treat_references_as_logical:
         - "http://hl7.org*"
@@ -80,4 +101,4 @@ logging:
     org.hl7.fhir.r4.hapi.ctx: WARN
     org.hl7.fhir.common.hapi.validation: WARN
     # Uncomment for verbose package loading debug info:
-    # ca.uhn.fhir.jpa.packages.PackageInstallerSvcImpl: DEBUG
+    ca.uhn.fhir.jpa.packages.PackageInstallerSvcImpl: DEBUG
